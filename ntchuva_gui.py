@@ -297,6 +297,7 @@ class JOGADAS:
 
         resultados_de_movimentos = {}
         melhores_jogadas_sorted = []
+        pontos_helper = 0
 
         coordenadas_validas = jogada.obter_posicoes_validas(tabuleiro_player_2)[0]
 
@@ -305,7 +306,7 @@ class JOGADAS:
             jogada.mover_peca(coordenada_a_jogar[0], coordenada_a_jogar[1], copy.deepcopy(tabuleiro_player_2))
             pontos_colectados = sum(map(sum, og_tabuleiro_P1)) - sum(map(sum, tabuleiro_player_1))
             resultados_de_movimentos.update({f"{jogada_valida}":pontos_colectados})
-            
+            pontos_helper += pontos_colectados
             # Devolução das Copias
             tabuleiro_player_1, tabuleiro_player_2 = copy.deepcopy(og_tabuleiro_P1), copy.deepcopy(og_tabuleiro_P2)
             pontos_player_1, pontos_player_2 = copy.deepcopy(og_pontos_P1), copy.deepcopy(og_pontos_P2)
@@ -315,7 +316,7 @@ class JOGADAS:
         for x in melhores_jogadas:
             melhores_jogadas_sorted.append(x[0])
         
-        if len(melhores_jogadas_sorted) != 0:
+        if pontos_helper > 0:
             return melhores_jogadas_sorted[0]
         else:
             return random.choice(coordenadas_validas)
@@ -351,5 +352,5 @@ def main():
     pygame.quit()
 
 if __name__ == "__main__":
-    main()   
+    main()
 
