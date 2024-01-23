@@ -1,10 +1,10 @@
-Jogo de Tabuleiro Ntchuva
-# O que é o Ntchuva?
+# Jogo de Tabuleiro Ntchuva
+## O que é o Ntchuva?
 O Ntchuva é um jogo tradicional da África subsahariana com origem mais provável no Egito. É uma variante do mancala, família de jogos de tabuleiro com várias concavidades e com o mesmo princípio geral de distribuição e conexão de peças. A partir do Nilo, os mancalas teriam se expandido progressivamente para o restante do continente africano e para o Oriente. 
 
 Além de bem cultural, o jogo é considerado parte da etnomatemática, pois compõe o conhecimento matemático desenvolvido por povos não-europeus, aplicado na solução de suas realidades.
 
-# Regras
+## Regras
 1. Preencha o tabuleiro com 02 peças em cada casa sendo 24 peças para jogador 1 e 24 peças para jogador 2
 1. Escolha a casa onde vai começar. Pegue todas as peças dessa casa e distribua-as pelas casas imediatas, sempre no sentido anti-horário, deixa apenas 01 peça em cada casa. Quando esta última peça cair em uma casa que tenha outra(s), a jogada continua, sempre obedecendo ao sentido anti- horário. A jogada só termina quando a última peça em mãos cair em uma casa vazia.
 1. Ao fim da regra número 2, duas opções são possiveis:
