@@ -24,7 +24,7 @@ ROW_HEIGHT = 115
 COL_WIDTH = 105
 MARGIN = 6
 
-tipo_de_letra = pygame.font.Font(None, 25)  
+tipo_de_letra = pygame.font.Font(None, 25)
 
 pontos_player_2:int = 0
 pontos_player_1:int = 0
@@ -38,14 +38,21 @@ max_recursion = 20
 
 class TABULEIRO:
     def __init__(self) -> None:
-
-        self.tabuleiro_vazio = pygame.image.load('resources/02_ntchuva/tabuleiro/tabuleiro_vazio.png')
+        self.P1_pos = {i:(random.randint(1024,1100), random.randint(236,480)) for i in range(1, 25)}
+        self.P2_pos = {i:(random.randint(66,140), random.randint(236,480)) for i in range(1, 25)}
+        
+        self.tabuleiro_vazio = pygame.image.load('resources/02_ntchuva/tabuleiro/tabuleiro_principal_mock.png')
         self.cova_pontos = pygame.image.load('resources/02_ntchuva/tabuleiro/covas_pontos.png')
+
+        self.pontos_jogador = pygame.image.load('resources/02_ntchuva/tabuleiro/pontos.png')
+        self.pedrinha = pygame.image.load('resources/02_ntchuva/tabuleiro/uma_pedra_individual.png')
         
         self.valores_pedras = {i: pygame.image.load(f'resources/02_ntchuva/tabuleiro/cova_{i:02d}.png') for i in range(13)}
         self.valores_pedras.update({13: pygame.image.load('resources/02_ntchuva/tabuleiro/cova_12+.png')})
 
     def desenhar_tabuleiro(self):
+        global pontos_player_1, pontos_player_2
+
         self.rect_cova_pontos = self.cova_pontos.get_rect()
         rect_cova_pontos = 52, 196
         screen.blit(self.cova_pontos, rect_cova_pontos)
@@ -53,9 +60,14 @@ class TABULEIRO:
         rect_cova_pontos = 1003, 196
         screen.blit(tabuleiro.cova_pontos, rect_cova_pontos)
 
-        self.desenhar_numero_de_pedras(tabuleiro_player_2, 319, 223)
-        self.desenhar_numero_de_pedras(tabuleiro_player_1, 319, 493)
+        self.desenhar_numero_de_pedras(tabuleiro_player_2, 319, 231)
+        self.desenhar_numero_de_pedras(tabuleiro_player_1, 319, 501)
+        
+        self.desenhar_pontos(1034, pontos_player_1)
+        self.desenhar_pontos(80, pontos_player_2)
 
+        pygame.display.flip()
+        
     def desenhar_numero_de_pedras(self, tabuleiro, x_offset, y_offset):
         global pontos_de_colisao
         for row in range(len(tabuleiro)):
@@ -83,12 +95,38 @@ class TABULEIRO:
                 screen.blit(img_pedras, pedras_render)
 
     def display_update(self):
-        screen.fill((217, 217, 217))
         rect_bg = bg_img.get_rect()
-        rect_bg.center = 588, 379
         screen.blit(bg_img, rect_bg)
+        offscreen_surface.fill((0, 0, 0))
         tabuleiro.desenhar_tabuleiro()
-        pygame.display.flip()
+        
+
+        
+    def desenhar_pontos(self, coor_x_txt, pontos):
+        fonte_pontos = pygame.font.Font("resources/02_ntchuva/fontes/lalezar-regular.ttf", 28)
+        pontos_txt = fonte_pontos.render(f"{pontos:02d}", True, (217, 217, 217))
+        
+        numero_de_pontos_rect = pontos_txt.get_rect(topleft=(coor_x_txt, 568))
+        screen.blit(pontos_txt, numero_de_pontos_rect)
+
+        global pontos_player_1, pontos_player_2
+        pontos_pedras_img = self.pedrinha
+
+        for index, x in enumerate(list(self.P1_pos.values())):
+            if index == pontos_player_1:
+                break
+            else:
+                pedras_render = pontos_pedras_img.get_rect(center=(x[0], x[1]))
+                screen.blit(pontos_pedras_img, pedras_render)
+            
+    
+        for index, x in enumerate(list(self.P2_pos.values())):
+            if index == pontos_player_2:
+                break
+            else:
+                pedras_render = pontos_pedras_img.get_rect(center=(x[0], x[1]))
+                screen.blit(pontos_pedras_img, pedras_render)        
+      
 
 class JOGADAS:
     def __init__(self):
@@ -274,6 +312,7 @@ class JOGADAS:
                 if (casas_percorridas-1 == casas_a_percorrer): # Verifica se está no ultimo movimento
                     if tabuleiro[x][y] > 1: # se a casa onde foi feito o ultimo movimento número de peças for maior que 1
                         if simulacao == 0:
+                            print(max_recursion)
                             print(f"\nPeças a mover: {tabuleiro[x][y]}") # Informa o número de peças que irá mover
                         max_recursion -= 1
                         self.mover_peca(x, y, tabuleiro) # Aplica novamente a função usando os parametros da posição actual.
@@ -283,6 +322,7 @@ class JOGADAS:
                         
                     elif tabuleiro[x][y] == 1: # CAPTURA DE PEÇA
                         self.captura_de_pecas(tabuleiro, x, y)
+                        max_recursion = 20
                         if simulacao == 0:
                             tab.display_update()
             x, y = next_x, next_y
@@ -332,22 +372,23 @@ screen = pygame.display.set_mode([1176, 758])
 
 bg_img = tabuleiro.tabuleiro_vazio
 relogio = pygame.time.Clock()
+offscreen_surface = pygame.Surface([1176, 758])
 
 def main():
-    running = True
+    
+    running = 1
     while running:
         
         running = jogada.jogo_principal()
-
-        screen.fill((217, 217, 217))
+        
         rect_bg = bg_img.get_rect()
         rect_bg.center = 588, 379
         screen.blit(bg_img, rect_bg)
-
+        
+        offscreen_surface.fill((0, 0, 0))
         tabuleiro.desenhar_tabuleiro()
         
-        pygame.display.flip()
-        relogio.tick(24)
+        relogio.tick(5)
 
     pygame.quit()
 
